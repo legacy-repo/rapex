@@ -6,9 +6,9 @@
 (s/def ::id
   (st/spec
    {:spec                #(some? (re-matches #"[a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8}" %))
-    :type                :string
     :description         "Task ID"
     :swagger/default     "40644dec-1abd-489f-a7a8-1011a86f40b0"
+    :swagger/type        "string"
     :reason              "Not valid a task id"}))
 
 (s/def ::page
@@ -31,17 +31,17 @@
 (s/def ::name
   (st/spec
    {:spec                string?
-    :type                :string
     :description         "The name of the plugin"
     :swagger/default     ""
+    :swagger/type        "string"
     :reason              "Not a valid plugin name"}))
 
 (s/def ::description
   (st/spec
    {:spec                string?
-    :type                :string
     :description         "Description of the task"
     :swagger/default     ""
+    :swagger/type        "string"
     :reason              "Not a valid description."}))
 
 (s/def ::payload
@@ -54,34 +54,34 @@
 
 (s/def ::owner
   (st/spec
-   {:spec                #(re-find #"^.*$" %)
-    :type                :string
+   {:spec                #(re-find #"^.*$" %) 
     :description         "Owner name that you want to query."
     :swagger/default     "huangyechao"
+    :swagger/type        "string"
     :reason              "Not a valid owner name, regex: '^[a-zA-Z_][a-zA-Z0-9_]{4,31}$'."}))
 
 (s/def ::plugin_name
   (st/spec
    {:spec                string?
-    :type                :string
     :description         "The name of the plugin"
     :swagger/default     ""
+    :swagger/type        "string"
     :reason              "Not a valid plugin name"}))
 
 (s/def ::plugin_type
   (st/spec
    {:spec                (or #(some? (re-matches #"[A-Za-z_\-]+" %)) #{"ReportPlugin" "StatPlugin" "DataPlugin" "ToolPlugin", "ChartPlugin"})
-    :type                :string
     :description         "Filter tasks by plugin_type field."
     :swagger/default     "ReportPlugin"
+    :swagger/type        "string"
     :reason              "Not valid plugin-type, only support `ReportPlugin`, `StatPlugin`, `DataPlugin`, `ToolPlugin`, `ChartPlugin` or your customized type."}))
 
 (s/def ::plugin_version
   (st/spec
    {:spec                string?
-    :type                :string
     :description         "The version of the plugin"
     :swagger/default     ""
+    :swagger/type        "string"
     :reason              "Not a valid plugin version"}))
 
 (s/def ::response

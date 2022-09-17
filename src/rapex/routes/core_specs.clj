@@ -3,32 +3,32 @@
             [spec-tools.core :as st]))
 
 (s/def ::version
-  (st/spec {:spec string?
-            :type :string
-            :description "Version of rapex instance."
+  (st/spec {:spec            string?
+            :description     "Version of rapex instance."
             :swagger/default "0.6.0-1-39ac444-SNAPSHOT"
-            :reason "Version number is not valid."}))
+            :swagger/type    "string"
+            :reason          "Version number is not valid."}))
 
 (s/def ::id
-  (st/spec {:spec number?
-            :type :number
-            :description "Migration Id."
+  (st/spec {:spec            number?
+            :type            :number
+            :description     "Migration Id."
             :swagger/default 2021081501
-            :reason "Migration id is not valid."}))
+            :reason          "Migration id is not valid."}))
 
 (s/def ::applied
-  (st/spec {:spec string?
-            :type :string
-            :description "Applied Id."
+  (st/spec {:spec            string?
+            :description     "Applied Id."
             :swagger/default "1631880547270"
-            :reason "Applied id is not valid."}))
+            :swagger/type    "string"
+            :reason          "Applied id is not valid."}))
 
 (s/def ::description
-  (st/spec {:spec string?
-            :type :string
-            :description "The description of database migration."
+  (st/spec {:spec            string? 
+            :description     "The description of database migration."
             :swagger/default "init-tables"
-            :reason "The description is not valid."}))
+            :swagger/type    "string"
+            :reason          "The description is not valid."}))
 
 (def db-version
   "A spec for the db version."
@@ -45,9 +45,9 @@
 (s/def ::filelink
   (st/spec
    {:spec                #(some? (re-matches #"^\/.*" %))
-    :type                :string
     :description         "File link, such as /40644dec-1abd-489f-a7a8-1011a86f40b0/log"
     :swagger/default     ""
+    :swagger/type        "string"
     :reason              "The filelink must be a string."}))
 
 (def filelink-params-query
