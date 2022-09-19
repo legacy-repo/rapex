@@ -4,7 +4,8 @@
             [rapex.config :refer [env]]
             [clojure.tools.logging :as log]
             [local-fs.core :as fs-lib])
-  (:import [java.sql DriverManager SQLException]
+  (:import [org.duckdb DuckDBDriver]
+           [java.sql DriverManager SQLException]
            [java.lang IllegalStateException IllegalArgumentException]
            [clojure.lang PersistentArrayMap Keyword]
            [java.util Properties]))
@@ -25,22 +26,29 @@
   "Get records based on user's query string.
   "
   [^String dbpath ^PersistentArrayMap sqlmap]
-  (let [sqlstr (sql/format sqlmap)]
-    (log/debug "Query String:" sqlstr)
-    (try
+  (try
+    (let [sqlstr (sql/format sqlmap)]
+      (log/debug "Query String:" sqlstr)
       (with-open [con (get-connection dbpath)]
-        (jdbc/execute! con sqlstr))
-      (catch Exception e
-        (condp (fn [cs t] (some #(instance? % t) cs)) e
+        (jdbc/execute! con sqlstr)))
+    (catch Exception e
+      (condp (fn [cs t] (some #(instance? % t) cs)) e
 
-          [IllegalStateException IllegalArgumentException SQLException]
-          (throw (custom-ex-info "Please check your query string, it has illegal argument."
-                                 :bad-request
-                                 {:query_str (str sqlmap)
-                                  :formated_str (str sqlstr)}))
+        [IllegalStateException IllegalArgumentException]
+        (throw (custom-ex-info "Cannot format your query string."
+                               :bad-request
+                               {:query_str (str sqlmap)
+                                :error e}))
 
-          ;; whe pass through the exception when not handled
-          (throw e))))))
+        [SQLException]
+        (throw (custom-ex-info "Please check your query string, it has illegal argument."
+                               :bad-request
+                               {:query_str (str sqlmap)
+                                :error e
+                                :formated_str (str (sql/format sqlmap))}))
+
+        ;; whe pass through the exception when not handled
+        (throw e)))))
 
 (defn get-total
   "Get total number of records based on user's query string.
@@ -49,7 +57,7 @@
   "
   ^Integer [^String dbpath ^PersistentArrayMap sqlmap]
   (let [sqlmap (merge sqlmap {:select [[:%count.* :total]]})
-        cleaned-sqlmap (apply dissoc sqlmap [:limit :offset])
+        cleaned-sqlmap (apply dissoc sqlmap [:limit :offset :order-by])
         results (get-results dbpath cleaned-sqlmap)]
     ;; [{:total 333}]
     (:total (first results))))

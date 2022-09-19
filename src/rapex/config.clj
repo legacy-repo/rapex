@@ -57,9 +57,9 @@
 
 (s/def ::cors-origins (s/nilable (s/coll-of string?)))
 
-(s/def ::config (s/keys :req-un [::port ::workdir ::datadir ::database-url
-                                 ::fs-services ::default-fs-service]
-                        :opt-un [::nrepl-port ::cors-origins ::enable-cors]))
+(s/def ::config (s/keys :req-un [::port ::workdir ::datadir]
+                        :opt-un [::nrepl-port ::cors-origins ::enable-cors
+                                 ::database-url ::fs-services ::default-fs-service]))
 
 (defn get-minio-rootdir
   [env]

@@ -46,7 +46,7 @@
                  [com.github.yjcyxky/local-fs "0.1.5"]
                  [com.github.yjcyxky/remote-fs "0.2.5"]
                  [com.github.yjcyxky/tservice-core "0.2.2"]
-                
+
                  ;; JSON/YAML/CSV
                  [com.fasterxml.jackson.core/jackson-core "2.11.0"]
                  [com.fasterxml.jackson.core/jackson-databind "2.11.0"]
@@ -65,6 +65,17 @@
 
   :global-vars {*warn-on-reflection* true
                 *assert* true}
+
+  :repositories [["official" "https://repo1.maven.org/maven2/"]
+                 ["central" "https://maven.aliyun.com/repository/central"]
+                 ["jcenter" "https://maven.aliyun.com/repository/jcenter"]
+                 ["clojars" "https://mirrors.tuna.tsinghua.edu.cn/clojars/"]
+                 ["clojars-official" "https://clojars.org/repo/"]]
+
+  :plugin-repositories [["central" "https://maven.aliyun.com/repository/central"]
+                        ["jcenter" "https://maven.aliyun.com/repository/jcenter"]
+                        ["clojars" "https://mirrors.tuna.tsinghua.edu.cn/clojars/"]
+                        ["clojars-official" "https://clojars.org/repo/"]]
 
   :release-tasks [["change" "version" "leiningen.release/bump-version"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
