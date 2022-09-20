@@ -1,10 +1,37 @@
-# rapex
+# Rapex
 
-FIXME: description
+A platform for discovering Response to Air Pollution EXposure
 
 ## Installation
 
-Download from http://example.com/FIXME.
+### Clone the repo
+
+```bash
+git clone https://github.com/rapex-lab/rapex.git
+```
+
+### Compile it
+
+```bash
+./bin/lein uberjar
+```
+
+### Launch a postgresql instance for testing
+
+```
+bash create-db.sh rapex_dev 54320
+```
+
+### Launch rapex
+
+```bash
+export ENABLE_RSERVE=true
+export RSERVE_PORT=7001
+export MIGRATE_DB=true
+export JAVA_OPTS='-Dconf=./example-conf.edn'
+
+bash bin/start
+```
 
 ## Usage
 

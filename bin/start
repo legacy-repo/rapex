@@ -10,6 +10,13 @@ JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"            # Use UTF-8
 echo "Using these JAVA_OPTS: ${JAVA_OPTS}"
 
 # Auto migrate database schema
-java $JAVA_OPTS -jar /app/target/uberjar/rapex.jar migrate
+if [ ! -z "$MIGRATE_DB" ];then
+    java $JAVA_OPTS -jar ./target/uberjar/rapex.jar migrate
+fi
 
-exec java $JAVA_OPTS -jar /app/target/uberjar/rapex.jar
+if [ ! -z "ENABLE_RSERVE" ] && [ ! -z "RSERVE_PORT" ];then
+    echo "Launch Rserve on port ${RSERVE_PORT}"
+    R -e "Rserve::Rserve(port=${RSERVE_PORT})"
+fi
+
+exec java $JAVA_OPTS -jar ./target/uberjar/rapex.jar

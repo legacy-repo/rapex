@@ -47,6 +47,8 @@
                  [com.github.yjcyxky/remote-fs "0.2.5"]
                  [com.github.yjcyxky/tservice-core "0.2.2"]
 
+                 [rojure "0.2.0"]
+
                  ;; JSON/YAML/CSV
                  [com.fasterxml.jackson.core/jackson-core "2.11.0"]
                  [com.fasterxml.jackson.core/jackson-databind "2.11.0"]
@@ -100,7 +102,7 @@
    :dev           [:project/dev :profiles/dev]
    :test          [:project/dev :project/test :profiles/test]
 
-   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
+   :project/dev  {:jvm-opts ["-XX:+IgnoreUnrecognizedVMOptions" "-Dconf=dev-config.edn"]
                   :dependencies [[directory-naming/naming-java "0.8"]
                                  [luminus-jetty "0.1.9"]
                                  [pjstadig/humane-test-output "0.10.0"]

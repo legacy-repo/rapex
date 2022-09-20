@@ -3,14 +3,12 @@
 ###################
 
 # Build currently doesn't work on > Java 11 (i18n utils are busted) so build on 8 until we fix this
-FROM adoptopenjdk/openjdk8:latest as builder
+FROM adoptopenjdk/openjdk8:x86_64-debianslim-jre8u345-b01 as builder
 
 WORKDIR /app/source
 
 ENV FC_LANG en-US
 ENV LC_CTYPE en_US.UTF-8
-
-COPY build/sources.list /etc/apt/sources.list
 
 # bash:    various shell scripts
 # wget:    installing lein
@@ -36,25 +34,33 @@ ADD . .
 # build the app
 RUN bin/build
 
-# install updated cacerts to /etc/ssl/certs/java/cacerts
-# RUN yum install -y java-cacerts
-
 # ###################
 # # STAGE 2: runner
 # ###################
 
-FROM graalvm-ce:java11-22.2.0 as runner
+FROM adoptopenjdk/openjdk8:x86_64-debianslim-jre8u345-b01 as runner
 
 LABEL org.opencontainers.image.source https://github.com/rapex-lab/rapex
 
-ENV PATH="$PATH:/app/bin:$GRAALVM_HOME/bin"
+ENV PATH="$PATH:/app/bin"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV FC_LANG en-US
 ENV LC_CTYPE en_US.UTF-8
 
 WORKDIR /app
 
-RUN gu install r
+RUN echo "**** Install dev packages ****" && \
+    apt-get update && \
+    apt-get install -y bash wget git curl r-base python3 python3-pip && \
+    \
+    echo "*** Install common development dependencies" && \
+    apt-get install -y libmysqlclient-dev python3-dev libxml2-dev libcurl4-openssl-dev libssl-dev && \
+    \
+    echo "**** Install R development dependencies ****" && \
+    Rscript -e 'install.packages("renv")' && \
+    \
+    echo "**** Cleanup ****" && \
+    apt-get clean
 
 # Add rapex script and uberjar
 RUN mkdir -p bin target/uberjar
