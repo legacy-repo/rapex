@@ -78,6 +78,10 @@
         trimmed (str (clj-str/replace minio-rootdir #"/$" "") "/")]
     (clj-str/replace abspath (re-pattern trimmed) "minio://")))
 
+(defn get-workdir
+  []
+  (:workdir env))
+
 (defn check-fs-root!
   [env]
   (let [fs-rootdir (get-minio-rootdir env)

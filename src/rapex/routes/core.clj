@@ -21,7 +21,7 @@
             [rapex.middleware.formats :as formats]
             [rapex.routes.task :as task-route]
             [rapex.routes.duckdb :as duckdb-route]
-            [rapex.routes.plot :as plot-route]
+            [rapex.tasks.boxplot :as boxplot-route]
             [remote-fs.route :as fs-route]
             [rapex.version :as v]
             [rapex.db.core :as db]))
@@ -107,35 +107,36 @@
                           {:body {:msg "No manifest file."
                                   :status 404}})))}}]
 
-  ;;  ["/download"
-  ;;   {:tags ["File"]
-  ;;    :get {:summary "Downloads a file"
-  ;;          :parameters {:query specs/filelink-params-query}
-  ;;          :handler (fn [{{{:keys [filelink]} :query} :parameters}]
-  ;;                     {:status 200
-  ;;                      :headers {"Content-Type" (or (mime-type/ext-mime-type filelink) "text/plain")}
-  ;;                      :body (-> (fs-lib/join-paths workdir (str "." filelink))
-  ;;                                (io/input-stream))})}}]
+   ["/download"
+    {:tags ["File"]
+     :get {:summary "Downloads a file"
+           :parameters {:query specs/filelink-params-query}
+           :handler (fn [{{{:keys [filelink]} :query} :parameters}]
+                      {:status 200
+                       :headers {"Content-Type" (or (mime-type/ext-mime-type filelink) "text/plain")}
+                       :body (-> (fs-lib/join-paths workdir (str "." filelink))
+                                 (io/input-stream))})}}]
 
-  ;;  ["/upload"
-  ;;   {:tags ["File"]
-  ;;    :post {:summary "Uploads File(s)."
-  ;;           :parameters {:multipart {:files (s/or :file multipart/temp-file-part :files (s/coll-of multipart/temp-file-part))}}
-  ;;           :handler (fn [{{{:keys [files]} :multipart} :parameters}]
-  ;;                      (let [files (if (map? files) [files] files)
-  ;;                            to-dir (get-workdir)]
-  ;;                        (doseq [file files]
-  ;;                          (let [filename (:filename file)
-  ;;                                tempfile (:tempfile file)
-  ;;                                to-path (fs-lib/join-paths to-dir filename)]
-  ;;                            (log/debug "Upload file: " filename)
-  ;;                            (fs-lib/create-directories! to-dir)
-  ;;                            (fs-lib/copy tempfile to-path)))
-  ;;                        {:status 201
-  ;;                         :body {:upload_path (str "file://" (get-relative-filepath to-dir))
-  ;;                                :files (map #(:filename %) files)
-  ;;                                :total (count files)}}))}}]
+   ["/upload"
+    {:tags ["File"]
+     :post {:summary "Uploads File(s)."
+            :parameters {:multipart {:files (s/or :file multipart/temp-file-part :files (s/coll-of multipart/temp-file-part))}}
+            :handler (fn [{{{:keys [files]} :multipart} :parameters}]
+                       (let [files (if (map? files) [files] files)
+                             to-dir (get-workdir)]
+                         (doseq [file files]
+                           (let [filename (:filename file)
+                                 tempfile (:tempfile file)
+                                 to-path (fs-lib/join-paths to-dir filename)]
+                             (log/debug "Upload file: " filename)
+                             (fs-lib/create-directories! to-dir)
+                             (fs-lib/copy tempfile to-path)))
+                         {:status 201
+                          :body {:upload_path (str "file://" (get-relative-filepath to-dir))
+                                 :files (map #(:filename %) files)
+                                 :total (count files)}}))}}] 
+   
    task-route/routes
-  ;;  fs-route/routes
+   fs-route/routes
    duckdb-route/routes
-   plot-route/routes])
+   boxplot-route/routes])

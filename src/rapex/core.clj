@@ -1,16 +1,15 @@
 (ns rapex.core
   (:gen-class)
-  (:require
-   [rapex.setup :as setup]  ; setup must be loaded before handler
-   [rapex.handler :as handler]
-   [rapex.nrepl :as nrepl]
-   [luminus.http-server :as http]
-   [luminus-migrations.core :as migrations]
-   [rapex.config :refer [env check-config get-migration-config]]
-   [clojure.tools.cli :refer [parse-opts]]
-   [clojure.tools.logging :as log]
-   [mount.core :as mount]
-   [rapex.R.core :as rcore]))
+  (:require [rapex.handler :as handler]
+            [rapex.nrepl :as nrepl]
+            [luminus.http-server :as http]
+            [luminus-migrations.core :as migrations]
+            [rapex.config :refer [env check-config get-migration-config]]
+            [clojure.tools.cli :refer [parse-opts]]
+            [clojure.tools.logging :as log]
+            [rapex.tasks :as tasks]
+            [mount.core :as mount]
+            [rapex.R.core :as rcore]))
 
 ;; log uncaught exceptions in threads
 (Thread/setDefaultUncaughtExceptionHandler
@@ -23,6 +22,10 @@
 (def cli-options
   [["-p" "--port PORT" "Port number"
     :parse-fn #(Integer/parseInt %)]])
+
+(mount/defstate ^{:no-reload :noop} event-listener
+  :start (tasks/start-tasks!)
+  :stop (tasks/stop-tasks!))
 
 (mount/defstate ^{:on-reload :noop} r-server
   :start

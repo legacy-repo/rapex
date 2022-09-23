@@ -30,9 +30,11 @@
                                               :context e})))))
 
 (defn test-rcode
-  []
+  [dest-dir log-path]
   (let [rconn (rojure/get-r "localhost" (:r-serve-port env))]
-    (rojure/r-get rconn (read-rcode "./examples/code/ggplot2.R"))))
+    (rojure/r-get rconn (read-rcode "./examples/code/ggplot2.R"))
+    (rojure/r-get rconn (format "draw_boxplot(\"%s\")"
+                                (fs-lib/join-paths dest-dir "boxplot.json")))))
 
 (comment
   (def rconn (rojure/get-r "localhost" (:r-serve-port env)))
