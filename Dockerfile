@@ -54,7 +54,7 @@ RUN echo "**** Install dev packages ****" && \
     apt-get install -y bash wget git curl r-base python3 python3-pip && \
     \
     echo "*** Install common development dependencies" && \
-    apt-get install -y libmysqlclient-dev python3-dev libxml2-dev libcurl4-openssl-dev libssl-dev && \
+    apt-get install -y libmariadb-dev python3-dev libxml2-dev libcurl4-openssl-dev libssl-dev && \
     \
     echo "**** Install R development dependencies ****" && \
     Rscript -e 'install.packages("renv")' && \

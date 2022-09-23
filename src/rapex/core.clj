@@ -9,7 +9,8 @@
    [rapex.config :refer [env check-config get-migration-config]]
    [clojure.tools.cli :refer [parse-opts]]
    [clojure.tools.logging :as log]
-   [mount.core :as mount]))
+   [mount.core :as mount]
+   [rapex.R.core :as rcore]))
 
 ;; log uncaught exceptions in threads
 (Thread/setDefaultUncaughtExceptionHandler
@@ -22,6 +23,12 @@
 (def cli-options
   [["-p" "--port PORT" "Port number"
     :parse-fn #(Integer/parseInt %)]])
+
+(mount/defstate ^{:on-reload :noop} r-server
+  :start
+  (rcore/start-r!)
+  :stop
+  (rcore/stop-r! r-server))
 
 (mount/defstate ^{:on-reload :noop} http-server
   :start

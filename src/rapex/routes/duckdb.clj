@@ -1,7 +1,8 @@
 (ns rapex.routes.duckdb
   (:require [ring.util.http-response :refer [ok not-found bad-request internal-server-error]]
             [rapex.db.query-duckdb :as qd]
-            [clojure.tools.logging :as log]))
+            [clojure.tools.logging :as log]
+            [rapex.routes.duckdb-specs :as ds]))
 
 (defn get-error-response
   [e]
@@ -17,23 +18,17 @@
 (defn get-results
   [title dbname]
   {:summary    title
-   :parameters {:query {:query_str string?
-                        :page pos-int?
-                        :page_size pos-int?}}
-   :responses  {200 {:body {:total    nat-int?
-                            :page     pos-int?
-                            :page_size pos-int?
-                            :data     any?}}
-                404 {:body {:msg string?
-                            :context any?}}
-                400 {:body {:msg string?
-                            :context any?}}
-                500 {:body {:msg string?
-                            :context any?}}}
+   :parameters {:query ::ds/DuckDBQueryParams}
+   :responses  {200 {:body ::ds/DuckDBItems}
+                404 {:body ds/duckdb-error-body}
+                400 {:body ds/duckdb-error-body}
+                500 {:body ds/duckdb-error-body}}
    :handler    (fn [{{{:keys [page page_size query_str]} :query} :parameters
                      {:as headers} :headers}]
                  (try
-                   (let [query-map (qd/read-string-as-map query_str)
+                   (let [page (or page 1)
+                         page_size (or page_size 10)
+                         query-map (qd/read-string-as-map query_str)
                          query-map (merge query-map {:limit page_size :offset (* (- page 1) page_size)})
                          dbpath (qd/get-db-path dbname)]
                      (log/info "database:" dbpath "page:" page, "page_size:" page_size, "query-map:" query-map)
@@ -51,9 +46,9 @@
 
    ["/omics-data"
     {:get  (get-results "Get Omics Data" "rapex_expr")}]
-   
+
    ["/degs"
     {:get  (get-results "Get DEGs" "rapex_degs")}]
-   
+
    ["/pathways"
     {:get  (get-results "Get Pathways" "rapex_pathway")}]])

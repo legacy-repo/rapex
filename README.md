@@ -25,8 +25,6 @@ bash create-db.sh rapex_dev 54320
 ### Launch rapex
 
 ```bash
-export ENABLE_RSERVE=true
-export RSERVE_PORT=7001
 export MIGRATE_DB=true
 export JAVA_OPTS='-Dconf=./example-conf.edn'
 

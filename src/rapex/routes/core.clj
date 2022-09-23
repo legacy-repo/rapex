@@ -21,6 +21,7 @@
             [rapex.middleware.formats :as formats]
             [rapex.routes.task :as task-route]
             [rapex.routes.duckdb :as duckdb-route]
+            [rapex.routes.plot :as plot-route]
             [remote-fs.route :as fs-route]
             [rapex.version :as v]
             [rapex.db.core :as db]))
@@ -136,4 +137,5 @@
   ;;                                :total (count files)}}))}}]
    task-route/routes
   ;;  fs-route/routes
-   duckdb-route/routes])
+   duckdb-route/routes
+   plot-route/routes])

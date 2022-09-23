@@ -14,9 +14,9 @@ if [ ! -z "$MIGRATE_DB" ];then
     java $JAVA_OPTS -jar ./target/uberjar/rapex.jar migrate
 fi
 
-if [ ! -z "ENABLE_RSERVE" ] && [ ! -z "RSERVE_PORT" ];then
-    echo "Launch Rserve on port ${RSERVE_PORT}"
-    R -e "Rserve::Rserve(port=${RSERVE_PORT})"
-fi
+# if [ ! -z "ENABLE_RSERVE" ] && [ ! -z "RSERVE_PORT" ];then
+#     echo "Launch Rserve on port ${RSERVE_PORT}"
+#     R -e "Rserve::Rserve(port=${RSERVE_PORT})"
+# fi
 
 exec java $JAVA_OPTS -jar ./target/uberjar/rapex.jar
