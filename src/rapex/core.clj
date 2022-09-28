@@ -27,11 +27,11 @@
   :start (tasks/start-tasks!)
   :stop (tasks/stop-tasks!))
 
-(mount/defstate ^{:on-reload :noop} r-server
-  :start
-  (rcore/start-r!)
-  :stop
-  (rcore/stop-r! r-server))
+;; (mount/defstate ^{:on-reload :noop} r-server
+;;   :start
+;;   (rcore/start-r!)
+;;   :stop
+;;   (rcore/stop-r! r-server))
 
 (mount/defstate ^{:on-reload :noop} http-server
   :start
@@ -67,9 +67,9 @@
   (.addShutdownHook (Runtime/getRuntime) (Thread. handler/destroy)))
 
 (defn -main
-  "Launch Quartet Service in standalone mode."
+  "Launch Rapex Service in standalone mode."
   [& args]
-  (log/info "Starting Quartet Service in STANDALONE mode")
+  (log/info "Starting Rapex Service in STANDALONE mode")
   ; Load configuration from system-props & env
   (mount/start #'rapex.config/env)
   (check-config env)

@@ -7,14 +7,14 @@
  :nrepl-port 7000
  :r-serve-port 6311
  :r-init-script nil
- :database-url "jdbc:postgresql://localhost:54320/rapex_dev?user=postgres&password=password"
- :workdir "./examples/results"
- :datadir "./examples/db"
+ ;; :database-url "jdbc:postgresql://localhost:54320/rapex_dev?user=postgres&password=password"
+ :workdir "/app"
+ :datadir "/app"
  :fs-services [{:fs-service             "minio"
                 :fs-endpoint            "http://localhost:9000"
                 :fs-access-key          "pgx-lab"
                 :fs-secret-key          "4gmPNjG5Jxxxxxxxxx"
-                :fs-rootdir             "/Users/codespace/Downloads/Rapex/minio"}
+                :fs-rootdir             "/app"}
                {:fs-service             "oss"
                 :fs-endpoint            "http://oss-cn-shanghai.aliyuncs.com"
                 :fs-access-key          "LTAI4G3Muxxxxxxxxx"
